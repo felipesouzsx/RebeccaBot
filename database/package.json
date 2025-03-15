@@ -1,0 +1,24 @@
+{
+  "name": "database",
+  "version": "0.1.0",
+  "description": "A database for Rebecca",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Felipe de Souza",
+  "license": "ISC",
+  "dependencies": {
+    "firebase-admin": "^13.2.0"
+  },
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "@firebase/util",
+      "protobufjs"
+    ],
+    "onlyBuiltDependencies": [
+      "@firebase/util",
+      "protobufjs"
+    ]
+  }
+}
