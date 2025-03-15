@@ -1,10 +1,10 @@
 module.exports.description = 'adiciona um canal pra eu ficar de olho';
 module.exports.staffCommand = true;
 module.exports.options = {
-  'channel': {
-    'type': 'ChannelOption',
-    'description': 'escolha um canal!',
-    'required': true
+  channel: {
+    type: 'ChannelOption',
+    description: 'escolha um canal!',
+    required: true
   }
 }
 
