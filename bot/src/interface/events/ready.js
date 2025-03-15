@@ -1,6 +1,6 @@
 module.exports = (CLIENT) => {
   CLIENT.user.setActivity('Cyberpunk 2077');
-  console.log('STATUS: Online');
+  console.log('BOT_STS: Online');
   registerCommands(CLIENT);
 }
 
