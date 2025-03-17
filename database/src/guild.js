@@ -18,9 +18,13 @@ async function getUsers(guildId) {
 }
 
 async function remove(guildId, userId) {
+  // todo: fail to write -> please mouse over recursiveDelete and scroll down
   let guild = await get(guildId);
-  let response = await guild.delete();
-  console.log(`RMV_GLD: ${guildId}`);
+  let response = await db.recursiveDelete(guild).then(
+    (response) => {
+      console.log(response);
+    }
+  );
 }
 
 
