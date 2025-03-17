@@ -1,4 +1,4 @@
-const DataBaseAccess = require('../../database/dbAccess.js');
+const DataBaseAccess = require('../../database/dbAccess.js'); 
 
 
 module.exports.description = 'use isso pra eu me configurar!';
@@ -14,5 +14,5 @@ module.exports.options = {
 
 module.exports.run = (CLIENT, interaction) => {
   const GUILD = interaction.guild;
-  DataBaseAccess.addGuild(GUILD);
+  DataBaseAccess.addGuildMembers(GUILD);
 }
