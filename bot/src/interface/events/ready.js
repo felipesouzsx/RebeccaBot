@@ -5,7 +5,7 @@ module.exports = (CLIENT) => {
 }
 
 
-function registerCommands(CLIENT) {
+async function registerCommands(CLIENT) {
   for(command in CLIENT.commands) {
     CLIENT.application.commands.create(CLIENT.commands[command]);
     console.log(`REG_CMD: ${command}`);
