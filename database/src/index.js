@@ -13,10 +13,24 @@ const server = app.listen(process.env.PORT, () => {
 
 // HTTP requests
 
+app.post('/guilds/:guildId', async (request, response) => {
+  Guild.add(request.params.guildId, request.body);
+  response.sendStatus(200);
+});
 app.post('/guilds/:guildId/users/:userId', async (request, response) => {
   Users.add(request.params.guildId, request.params.userId, request.body);
   response.sendStatus(200);
 });
+app.post('/guilds/:guildId/watchlist/:channelId', async (request, response) => {
+  try {
+    Guild.addChannelToWatchlist(request.params.guildId, request.params.channelId);
+  } catch(error) {
+    console.log(`DBS_ERR: ${error}`);
+    response.sendStatus(500);
+    return;
+  }
+  response.sendStatus(201);
+})
 
 
 app.get('/guilds/:guildId/users/:userId', async (request, response) => {

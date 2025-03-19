@@ -1,4 +1,5 @@
 const { db } = require('./db.js');
+const admin = require('firebase-admin');
 
 
 async function get(guildId) {
@@ -17,15 +18,31 @@ async function getUsers(guildId) {
   return result;
 }
 
-async function remove(guildId, userId) {
+
+async function add(guildId, users) {
+  let guild = await get(guildId);
+  await guild.set({'watchlist': []});
+  console.log(`ADD_GLD: ${guildId} = ${JSON.stringify(users)}`);
+}
+
+
+async function remove(guildId) {
   // todo: fail to write -> please mouse over recursiveDelete and scroll down
   let guild = await get(guildId);
-  let response = await db.recursiveDelete(guild).then(
+  await db.recursiveDelete(guild).then(
     (response) => {
       console.log(response);
     }
   );
 }
 
+async function addChannelToWatchlist(guildId, channelId) {
+  let guild = await get(guildId);
+  await guild.update({
+    watchlist: admin.firestore.FieldValue.arrayUnion(channelId) // Append to array field
+  });
+  console.log(`ADD_CHL: ${channelId}`);
+}
 
-module.exports = { get, getUsers, remove }
+
+module.exports = { get, add, getUsers, remove, addChannelToWatchlist }
