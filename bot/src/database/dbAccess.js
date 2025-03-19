@@ -26,7 +26,7 @@ async function addGuildMembers(GUILD) {
     if (guildMember.user.bot) { return; }
     let userData = {
       username: guildMember.user.username,
-      lastMessageTimestamp: Date.now()
+      lastMessageTimestamp: Math.floor(Date.now() / 1000) // Milliseconds to seconds(unix)
     };
     await addUser(GUILD.id, guildMember.user.id, userData);
   });

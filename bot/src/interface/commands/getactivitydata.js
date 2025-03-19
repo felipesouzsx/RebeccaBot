@@ -20,16 +20,17 @@ module.exports.run = async (CLIENT, interaction) => {
   sendChatMessage(interaction, `BOT_RSP: Retrieved a total of ${memberIds.length} members.`);
 
   for(memberId in memberIds) {
-    let member = guildMembers[memberIds[memberId]];
     console.log(memberId);
-    if (count == 20) {
+
+    let member = guildMembers[memberIds[memberId]];
+    let time = `<t:${member.lastMessageTimestamp}:R>`;
+    message += `${memberId}. ${member.username} = ${time}\n`;
+    count++;
+
+    if (count == 20 || memberId == memberIds.length - 1) {
       sendChatMessage(interaction, message);
       message = '';
       count = 0;
     };
-    let lastMessageDate = new Date(member.lastMessageTimestamp);
-    let time = `${lastMessageDate.toLocaleDateString('en-US')}`;
-    message += `${memberId}. ${member.username} = ${time}\n`;
-    count++;
   }
 }
