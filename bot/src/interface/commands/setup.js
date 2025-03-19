@@ -12,7 +12,10 @@ module.exports.options = {
 }
 
 
-module.exports.run = (CLIENT, interaction) => {
+module.exports.run = async (CLIENT, interaction) => {
   const GUILD = interaction.guild;
+  let logChannel = interaction.options['logchannel'].value;
+
+  await DataBaseAccess.addGuild(GUILD.id);
   DataBaseAccess.addGuildMembers(GUILD);
 }

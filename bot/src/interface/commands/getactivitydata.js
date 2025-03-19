@@ -12,7 +12,7 @@ function sendChatMessage(interaction, message) {
 module.exports.run = async (CLIENT, interaction) => {
   interaction.reply('BOT_RSP: Gathering data from database...');
 
-  let guildMembers = await DataBaseAccess.getGuildMembers(interaction.guild);
+  let guildMembers = await DataBaseAccess.getGuildMembers(interaction.guild.id);
   let memberIds = Object.keys(guildMembers);
   let count = 0;
   let message = '';
@@ -20,8 +20,6 @@ module.exports.run = async (CLIENT, interaction) => {
   sendChatMessage(interaction, `BOT_RSP: Retrieved a total of ${memberIds.length} members.`);
 
   for(memberId in memberIds) {
-    console.log(memberId);
-
     let member = guildMembers[memberIds[memberId]];
     let time = `<t:${member.lastMessageTimestamp}:R>`;
     message += `${memberId}. ${member.username} = ${time}\n`;

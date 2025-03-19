@@ -6,5 +6,5 @@ module.exports.staffCommand = true;
 
 
 module.exports.run = (CLIENT, interaction) => {
-  DataBaseAccess.removeGuild(interaction.guild);
+  DataBaseAccess.removeGuild(interaction.guild.id);
 }

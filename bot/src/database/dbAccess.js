@@ -19,6 +19,19 @@ async function fetchDatabase(url, method='GET', body=null) {
 }
 
 
+async function addGuild(guildId) {
+  try {
+    let data = JSON.stringify([]);
+    await fetchDatabase(`/guilds/${guildId}`, 'POST', data)
+    .then(async (response) => {
+        if (!response.ok) { print_error(response.status); return; };
+        console.log(`ADD_GLD: ${channelId}`);
+      }
+    );
+  } catch(error) { print_error(error); }
+}
+
+
 async function addGuildMembers(GUILD) {
   let members = GUILD.members;
 
@@ -33,10 +46,47 @@ async function addGuildMembers(GUILD) {
 }
 
 
-async function getGuildMembers(GUILD) {
+async function getWatchlist(guildId) {
+  let watchlist = [];
+  try {
+    await fetchDatabase(`/guilds/${guildId}/watchlist`,
+      (response) => {
+        if (!response.ok) { print_error(response.status); return; };
+        watchlist = response.json().watchlist;
+      }
+    )
+  } catch(error) { print_error(error); }
+  return watchlist;
+}
+
+async function addChannelToWatchlist(guildId, channelId) {
+  try {
+    let data = JSON.stringify({'channelId': channelId});
+    await fetchDatabase(`/guilds/${guildId}/watchlist/${channelId}`, 'POST', data)
+    .then(async (response) => {
+        if (!response.ok) { print_error(response.status); return; };
+        console.log(`ADD_CHL: ${channelId}`);
+      }
+    );
+  } catch(error) { print_error(error); }
+}
+
+async function removeChannelFromWatchlist(guildId, channelId) {
+  try {
+    await fetchDatabase(`/guilds/${guildId}/watchlist/${channelId}`, 'DELETE')
+    .then(async (response) => {
+        if (!response.ok) { print_error(response.status); return; };
+        console.log(`RMV_CHL: ${response.status}`);
+      }
+    );
+  } catch(error) { print_error(error); }
+}
+
+
+async function getGuildMembers(guildId) {
   let members = {};
   try {
-    await fetchDatabase(`/guilds/${GUILD.id}/users`, 'GET').then(
+    await fetchDatabase(`/guilds/${guildId}/users`).then(
       async (response) => {
         if (!response.ok) { print_error(response.status); return; };
         members = await response.json();
@@ -49,11 +99,9 @@ async function getGuildMembers(GUILD) {
 
 async function addUser(guildId, userId, data) {
   try {
-    await fetchDatabase(
-      `/guilds/${guildId}/users/${userId}`,
-      'POST',
-      JSON.stringify(data)
-    ).then((response) => {
+    let stringData = JSON.stringify(data);
+    await fetchDatabase(`/guilds/${guildId}/users/${userId}`,'POST', stringData)
+    .then((response) => {
       console.log(`ADD_USR: Added user ${data.username} to database`);
       console.log(`DBS_RSP: ${response.status}`);
     })
@@ -73,9 +121,9 @@ async function editUser(guildId, userId, data) {
 }
 
 
-async function removeGuild(GUILD) {
+async function removeGuild(guildId) {
   try {
-    await fetchDatabase(`/guilds/${GUILD.id}`, 'DELETE').then(
+    await fetchDatabase(`/guilds/${guildId}`, 'DELETE').then(
       (response) => {
         console.log(`DBS_RSP: ${response.status}`);
       }
@@ -84,4 +132,8 @@ async function removeGuild(GUILD) {
 }
 
 
-module.exports = { addGuildMembers, getGuildMembers, addUser, editUser, removeGuild };
+module.exports = { 
+  addGuildMembers, getGuildMembers, removeGuild, addGuild,
+  addUser, editUser, 
+  addChannelToWatchlist, removeChannelFromWatchlist, getWatchlist
+};

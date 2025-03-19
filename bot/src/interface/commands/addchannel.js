@@ -1,3 +1,6 @@
+const DataBaseAccess = require('../../database/dbAccess.js');
+
+
 module.exports.description = 'adiciona um canal pra eu ficar de olho';
 module.exports.staffCommand = true;
 module.exports.options = {
@@ -9,5 +12,7 @@ module.exports.options = {
 }
 
 module.exports.run = (CLIENT, interaction) => {
-  console.log('boo');
+  let channelId = interaction.options.get('channel').value;
+  interaction.reply(`Adding <#${channelId}> to watchlist`);
+  DataBaseAccess.addChannelToWatchlist(interaction.guild.id, channelId)
 }
