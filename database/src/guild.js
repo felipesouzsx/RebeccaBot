@@ -2,27 +2,30 @@ const { db } = require('./db.js');
 const admin = require('firebase-admin');
 
 
+var cache = {}
+
+// please optimize READS ON THE DB. PLEASE FELIPE PLEASE.
+//                                          - past felipe
 async function get(guildId) {
+  if (guildId in cache) { return cache[guildId] };
+
   const guildDocument = await db.collection('guilds').doc(guildId);
+  cache[guildId] = guildDocument;
   return guildDocument;
 }
 
 async function getUsers(guildId) {
   let guild = await get(guildId);
-  let guildUsers = await guild.collection('users');
-  let usersCollection = await guildUsers.get();
-  let result = {};
-  usersCollection.forEach((userDocument) => {
-    result[userDocument.id] = userDocument.data(); // User JSON data
-  });
-  return result;
+  let guildUsers = await guild.collection('users').data().users;
+  return guildUsers;
 }
 
 
 async function add(guildId, users) {
   let guild = await get(guildId);
+  let guildUsers = guild.collection('users');
   await guild.set({'watchlist': []});
-  console.log(`ADD_GLD: ${guildId} = ${JSON.stringify(users)}`);
+  await guild.set({'users': users});
 }
 
 
@@ -41,7 +44,13 @@ async function addChannelToWatchlist(guildId, channelId) {
   await guild.update({
     watchlist: admin.firestore.FieldValue.arrayUnion(channelId) // Append to array field
   });
-  console.log(`ADD_CHL: ${channelId}`);
+}
+
+async function removeChannelFromWatchlist(guildId, channelId) {
+  let guild = await get(guildId);
+  await guild.update({
+    watchlist: admin.firestore.FieldValue.arrayRemove([channelId])
+  });
 }
 
 async function getWatchlist(guildId) {
@@ -54,5 +63,5 @@ async function getWatchlist(guildId) {
 
 module.exports = { 
   get, add, remove, getUsers, 
-  addChannelToWatchlist, getWatchlist
+  addChannelToWatchlist, removeChannelFromWatchlist, getWatchlist
 }

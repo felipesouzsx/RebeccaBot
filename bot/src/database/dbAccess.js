@@ -5,6 +5,21 @@ function print_error(error) {
   console.log(`DBS_ERR: ${error}${error.stack != undefined ? `${error.stack}` : ''}`);
 }
 
+async function getGuildMembers(guildId) {
+  let members = {};
+  try {
+    await fetchDatabase(`/guilds/${guildId}/users`).then(
+      async (response) => {
+        if (!response.ok) { print_error(response.status); return; };
+        members = await response.json();
+      }
+    );
+  } catch(error) { print_error(error); }
+  return members;
+}
+
+
+
 
 async function fetchDatabase(url, method='GET', body=null) {
   let request = {
@@ -19,30 +34,32 @@ async function fetchDatabase(url, method='GET', body=null) {
 }
 
 
-async function addGuild(guildId) {
+async function addGuild(GUILD) {
   try {
-    let data = JSON.stringify([]);
-    await fetchDatabase(`/guilds/${guildId}`, 'POST', data)
+    let members = await getGuildMembers(GUILD);
+    let data = JSON.stringify(members);
+    await fetchDatabase(`/guilds/${GUILD.id}`, 'POST', data)
     .then(async (response) => {
         if (!response.ok) { print_error(response.status); return; };
-        console.log(`ADD_GLD: ${channelId}`);
+        console.log(`ADD_GLD: ${GUILD.id}`);
       }
     );
   } catch(error) { print_error(error); }
 }
 
 
-async function addGuildMembers(GUILD) {
+async function getGuildMembers(GUILD) {
   let members = GUILD.members;
-
+  let result = {}
   members.cache.each(async (guildMember) => {
     if (guildMember.user.bot) { return; }
     let userData = {
       username: guildMember.user.username,
       lastMessageTimestamp: Math.floor(Date.now() / 1000) // Milliseconds to seconds(unix)
     };
-    await addUser(GUILD.id, guildMember.user.id, userData);
+    result[guildMember.user.id] = userData;
   });
+  return result;
 }
 
 
@@ -84,20 +101,6 @@ async function removeChannelFromWatchlist(guildId, channelId) {
 }
 
 
-async function getGuildMembers(guildId) {
-  let members = {};
-  try {
-    await fetchDatabase(`/guilds/${guildId}/users`).then(
-      async (response) => {
-        if (!response.ok) { print_error(response.status); return; };
-        members = await response.json();
-      }
-    );
-  } catch(error) { print_error(error); }
-  return members;
-}
-
-
 async function addUser(guildId, userId, data) {
   try {
     let stringData = JSON.stringify(data);
@@ -134,7 +137,7 @@ async function removeGuild(guildId) {
 
 
 module.exports = { 
-  addGuildMembers, getGuildMembers, removeGuild, addGuild,
+  getGuildMembers, removeGuild, addGuild,
   addUser, editUser, 
   addChannelToWatchlist, removeChannelFromWatchlist, getWatchlist
 };
