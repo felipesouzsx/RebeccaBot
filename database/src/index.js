@@ -41,6 +41,10 @@ app.get('/guilds/:guildId/users', async (request, response) => {
   let result = await Guild.getUsers(request.params.guildId);
   response.send(JSON.stringify(result));
 });
+app.get('/guilds/:guildId/watchlist', async (request, response) => {
+  let result = await Guild.getWatchlist(request.params.guildId);
+  response.send(JSON.stringify(result));
+})
 
 
 app.put('/guilds/:guildId/users/:userId', async (request, response) => {
@@ -57,4 +61,8 @@ app.delete('/guilds/:guildId', async (request, response) => {
   Guild.remove(request.params.guildId);
   console.log(`RMV_GLD: ${request.params.guildId}`);
   response.sendStatus(204);
+})
+//TODO
+app.delete('/guilds/:guildId/watchlist/:channelId', async (request, response) => {
+  response.sendStatus(403);
 })

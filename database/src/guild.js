@@ -3,8 +3,8 @@ const admin = require('firebase-admin');
 
 
 async function get(guildId) {
-  const guildUsersCollection = await db.collection('guilds').doc(guildId);
-  return guildUsersCollection;
+  const guildDocument = await db.collection('guilds').doc(guildId);
+  return guildDocument;
 }
 
 async function getUsers(guildId) {
@@ -44,5 +44,15 @@ async function addChannelToWatchlist(guildId, channelId) {
   console.log(`ADD_CHL: ${channelId}`);
 }
 
+async function getWatchlist(guildId) {
+  let guild = await get(guildId);
+  let settingsCollection = await guild.get();
+  let watchlist = settingsCollection.data().watchlist;
+  return watchlist;
+}
 
-module.exports = { get, add, getUsers, remove, addChannelToWatchlist }
+
+module.exports = { 
+  get, add, remove, getUsers, 
+  addChannelToWatchlist, getWatchlist
+}
