@@ -49,10 +49,11 @@ async function addGuildMembers(GUILD) {
 async function getWatchlist(guildId) {
   let watchlist = [];
   try {
-    await fetchDatabase(`/guilds/${guildId}/watchlist`,
-      (response) => {
+    await fetchDatabase(`/guilds/${guildId}/watchlist`).then(
+      async (response) => {
         if (!response.ok) { print_error(response.status); return; };
-        watchlist = response.json().watchlist;
+        watchlist = await response.json();
+        console.log(`DBS_RES: ${watchlist}`);
       }
     )
   } catch(error) { print_error(error); }
