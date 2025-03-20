@@ -16,10 +16,12 @@ const server = app.listen(process.env.PORT, () => {
 app.post('/guilds/:guildId', async (request, response) => {
   Guild.add(request.params.guildId, request.body);
   response.sendStatus(200);
+  console.log(`ADD_GLD: ${request.params.guildId}`);
 });
 app.post('/guilds/:guildId/users/:userId', async (request, response) => {
   Users.add(request.params.guildId, request.params.userId, request.body);
   response.sendStatus(200);
+  console.log(`ADD_USR: ${request.params.userId}`);
 });
 app.post('/guilds/:guildId/watchlist/:channelId', async (request, response) => {
   try {
@@ -30,6 +32,7 @@ app.post('/guilds/:guildId/watchlist/:channelId', async (request, response) => {
     return;
   }
   response.sendStatus(201);
+  console.log(`ADD_CHL: ${request.params.channelId}`);
 })
 
 
@@ -56,13 +59,16 @@ app.put('/guilds/:guildId/users/:userId', async (request, response) => {
 app.delete('/guilds/:guildId/users/:userId', async (request, response) => {
   Users.remove(request.params.guildId, request.params.userId);
   response.sendStatus(204);
+  console.log(`RMV_USR: ${request.params.guildId}`);
 })
 app.delete('/guilds/:guildId', async (request, response) => {
   Guild.remove(request.params.guildId);
-  console.log(`RMV_GLD: ${request.params.guildId}`);
   response.sendStatus(204);
+  console.log(`RMV_GLD: ${request.params.guildId}`);
 })
 //TODO
 app.delete('/guilds/:guildId/watchlist/:channelId', async (request, response) => {
-  response.sendStatus(403);
+  Guild.removeChannelFromWatchlist(request.params.guildId, request.params.channelId);
+  response.sendStatus(204);
+  console.log(`RMV_CHL: ${request.params.channelId}`);
 })

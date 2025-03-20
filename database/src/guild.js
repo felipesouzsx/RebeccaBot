@@ -49,7 +49,7 @@ async function addChannelToWatchlist(guildId, channelId) {
 async function removeChannelFromWatchlist(guildId, channelId) {
   let guild = await get(guildId);
   await guild.update({
-    watchlist: admin.firestore.FieldValue.arrayRemove([channelId])
+    watchlist: admin.firestore.FieldValue.arrayRemove(channelId)
   });
 }
 
