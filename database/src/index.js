@@ -59,14 +59,13 @@ app.put('/guilds/:guildId/users/:userId', async (request, response) => {
 app.delete('/guilds/:guildId/users/:userId', async (request, response) => {
   Users.remove(request.params.guildId, request.params.userId);
   response.sendStatus(204);
-  console.log(`RMV_USR: ${request.params.guildId}`);
+  console.log(`RMV_USR: ${request.params.userId} from guild ${request.params.guildId}`);
 })
 app.delete('/guilds/:guildId', async (request, response) => {
   Guild.remove(request.params.guildId);
   response.sendStatus(204);
   console.log(`RMV_GLD: ${request.params.guildId}`);
 })
-//TODO
 app.delete('/guilds/:guildId/watchlist/:channelId', async (request, response) => {
   Guild.removeChannelFromWatchlist(request.params.guildId, request.params.channelId);
   response.sendStatus(204);

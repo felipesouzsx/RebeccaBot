@@ -11,6 +11,5 @@ module.exports.run = async (CLIENT, interaction) => {
   watchlist.forEach((channel) => {
     reply += `- <#${channel}>\n`;
   })
-
   interaction.reply(`This server's watchlist:\n${reply}`)
 }

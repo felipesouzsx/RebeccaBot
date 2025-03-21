@@ -18,9 +18,6 @@ async function getGuildMembers(guildId) {
   return members;
 }
 
-
-
-
 async function fetchDatabase(url, method='GET', body=null) {
   let request = {
     method: method,
@@ -34,6 +31,8 @@ async function fetchDatabase(url, method='GET', body=null) {
 }
 
 
+
+
 async function addGuild(GUILD) {
   try {
     let members = await getGuildMembers(GUILD);
@@ -42,6 +41,17 @@ async function addGuild(GUILD) {
     .then(async (response) => {
         if (!response.ok) { print_error(response.status); return; };
         console.log(`ADD_GLD: ${GUILD.id}`);
+      }
+    );
+  } catch(error) { print_error(error); }
+}
+
+
+async function removeGuild(guildId) {
+  try {
+    await fetchDatabase(`/guilds/${guildId}`, 'DELETE').then(
+      (response) => {
+        console.log(`DBS_RSP: ${response.status}`);
       }
     );
   } catch(error) { print_error(error); }
@@ -77,6 +87,7 @@ async function getWatchlist(guildId) {
   return watchlist;
 }
 
+
 async function addChannelToWatchlist(guildId, channelId) {
   try {
     let data = JSON.stringify({'channelId': channelId});
@@ -88,6 +99,7 @@ async function addChannelToWatchlist(guildId, channelId) {
     );
   } catch(error) { print_error(error); }
 }
+
 
 async function removeChannelFromWatchlist(guildId, channelId) {
   try {
@@ -117,17 +129,6 @@ async function editUser(guildId, userId, data) {
   let jsonData = JSON.stringify(data);
   try {
     await fetchDatabase(`/guilds/${guildId}/users/${userId}`, 'PUT', jsonData).then(
-      (response) => {
-        console.log(`DBS_RSP: ${response.status}`);
-      }
-    );
-  } catch(error) { print_error(error); }
-}
-
-
-async function removeGuild(guildId) {
-  try {
-    await fetchDatabase(`/guilds/${guildId}`, 'DELETE').then(
       (response) => {
         console.log(`DBS_RSP: ${response.status}`);
       }
