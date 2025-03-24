@@ -1,4 +1,22 @@
 require('dotenv').config();
+const discordUtil = require('../util/discordUtil.js');
+
+
+
+class User {
+  constructor(username, lastMessageTimestamp) {
+    this.username = username;
+    this.lastMessageTimestamp = lastMessageTimestamp;
+  }
+
+  getJson() {
+    return {
+      username: this.username,
+      lastMessageTimestamp: this.lastMessageTimestamp
+    }
+  }
+}
+
 
 
 function print_error(error) {
@@ -18,6 +36,7 @@ async function getGuildMembers(guildId) {
   return members;
 }
 
+
 async function fetchDatabase(url, method='GET', body=null) {
   let request = {
     method: method,
@@ -35,7 +54,7 @@ async function fetchDatabase(url, method='GET', body=null) {
 
 async function addGuild(GUILD) {
   try {
-    let members = await getGuildMembers(GUILD);
+    let members = await discordUtil.getGuildMembers(GUILD);
     let data = JSON.stringify(members);
     await fetchDatabase(`/guilds/${GUILD.id}`, 'POST', data)
     .then(async (response) => {
@@ -58,19 +77,7 @@ async function removeGuild(guildId) {
 }
 
 
-async function getGuildMembers(GUILD) {
-  let members = GUILD.members;
-  let result = {}
-  members.cache.each(async (guildMember) => {
-    if (guildMember.user.bot) { return; }
-    let userData = {
-      username: guildMember.user.username,
-      lastMessageTimestamp: Math.floor(Date.now() / 1000) // Milliseconds to seconds(unix)
-    };
-    result[guildMember.user.id] = userData;
-  });
-  return result;
-}
+
 
 
 async function getWatchlist(guildId) {
@@ -113,20 +120,24 @@ async function removeChannelFromWatchlist(guildId, channelId) {
 }
 
 
-async function addUser(guildId, userId, data) {
+
+
+async function addUser(guildId, userId, user) {
   try {
-    let stringData = JSON.stringify(data);
+    let userJson = user.getJson();
+    let stringData = JSON.stringify(userJson);
     await fetchDatabase(`/guilds/${guildId}/users/${userId}`,'POST', stringData)
     .then((response) => {
-      console.log(`ADD_USR: Added user ${data.username} to database`);
+      console.log(`ADD_USR: Added user ${userJson.username} to database`);
       console.log(`DBS_RSP: ${response.status}`);
     })
   } catch(error) { print_error(error); }
 }
 
 
-async function editUser(guildId, userId, data) {
-  let jsonData = JSON.stringify(data);
+async function editUser(guildId, userId, user) {
+  let userJson = user.getJson();
+  let jsonData = JSON.stringify(userJson);
   try {
     await fetchDatabase(`/guilds/${guildId}/users/${userId}`, 'PUT', jsonData).then(
       (response) => {
@@ -139,6 +150,6 @@ async function editUser(guildId, userId, data) {
 
 module.exports = { 
   getGuildMembers, removeGuild, addGuild,
-  addUser, editUser, 
+  User, addUser, editUser, 
   addChannelToWatchlist, removeChannelFromWatchlist, getWatchlist
 };

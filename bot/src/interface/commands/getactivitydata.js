@@ -12,7 +12,7 @@ function sendChatMessage(interaction, message) {
 module.exports.run = async (CLIENT, interaction) => {
   interaction.reply('BOT_RSP: Gathering data from database...');
 
-  let guildMembers = await DataBaseAccess.getGuildMembers(interaction.guild);
+  let guildMembers = await DataBaseAccess.getGuildMembers(interaction.guild.id);
   let memberIds = Object.keys(guildMembers);
   let count = 0;
   let message = '';
