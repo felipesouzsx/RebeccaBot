@@ -10,28 +10,35 @@ const CLIENT = new Client({
 CLIENT.commands = {};
 
 
+// Reads all modules under the events folder, every module is named after an
+// event. Then, register all events on the discord API
+// Event names:
+// https://discord.js.org/docs/packages/discord.js/14.18.0/ClientEvents:Interface
 FileSystem.readdir('./src/interface/events/', (error, files) => {
-  if (error) { return console.log(error); }
+  if (error) { return console.log(`FIL_ERR: ${error} : ${error.stack}`); }
   files.forEach((file) => {
     if (!file.endsWith('.js')) { return; }
-    let eventName = file.split('.')[0];
+    const eventName = file.split('.')[0];
     CLIENT.on(eventName, require(`./interface/events/${file}`).bind(null, CLIENT));
+    console.log(`ADD_EVT: ${eventName}`);
   })
 })
 
-
+// Almost the same thing as above, but for commands. Each module also has
+// special properties, such as command options, that allow me to configure the
+// commands here. Unlike events, commands can be named anything I want.
 FileSystem.readdir('./src/interface/commands/', (error, files) => {
-  if (error) { return console.log(error); }
+  if (error) { return console.log(`FIL_ERR: ${error} : ${error.stack}`); }
   files.forEach((file) => {
     if (!file.endsWith('.js')) { return; }
-    let commandName = file.split('.')[0];
-    let commandProps = require(`./interface/commands/${file}`);
+    const commandName = file.split('.')[0];
+    const commandProps = require(`./interface/commands/${file}`);
     const Command = new SlashCommandBuilder()
       .setName(commandName)
       .setDescription(commandProps.description)
       .setDefaultMemberPermissions(commandProps.staffCommand ? PermissionFlagsBits.Administrator : null);
     for(option in commandProps.options) {
-      let optionProps = commandProps.options[option]
+      const optionProps = commandProps.options[option]
       Command[`add${optionProps.type}`](Option => 
         Option.setName(option)
         .setDescription(optionProps.description)
@@ -45,4 +52,5 @@ FileSystem.readdir('./src/interface/commands/', (error, files) => {
 })
 
 
+// Connecting to discord
 CLIENT.login(process.env.TOKEN);

@@ -1,10 +1,11 @@
-const DataBaseAccess = require('../../database/dbAccess.js'); 
+const guildDB = require('../../database/guild.js');
 
 
 module.exports.description = 'CAREFUL! This removes this guild from the database.';
 module.exports.staffCommand = true;
 
 
-module.exports.run = (CLIENT, interaction) => {
-  DataBaseAccess.removeGuild(interaction.guild.id);
+module.exports.run = async (CLIENT, interaction) => {
+  await guildDB.remove(interaction.guild.id);
+  interaction.reply('Removed this Guild from my database.');
 }

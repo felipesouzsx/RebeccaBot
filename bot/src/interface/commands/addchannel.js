@@ -1,4 +1,4 @@
-const DataBaseAccess = require('../../database/dbAccess.js');
+const guildDB = require('../../database/guild.js');
 
 
 module.exports.description = 'adiciona um canal pra eu ficar de olho';
@@ -14,5 +14,5 @@ module.exports.options = {
 module.exports.run = (CLIENT, interaction) => {
   let channelId = interaction.options.get('channel').value;
   interaction.reply(`Adding <#${channelId}> to watchlist`);
-  DataBaseAccess.addChannelToWatchlist(interaction.guild.id, channelId)
+  guildDB.addChannelToWatchlist(interaction.guild.id, channelId);
 }

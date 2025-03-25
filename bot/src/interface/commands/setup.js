@@ -1,4 +1,4 @@
-const DataBaseAccess = require('../../database/dbAccess.js'); 
+const guildDB = require('../../database/guild.js');
 
 
 module.exports.description = 'use isso pra eu me configurar!';
@@ -15,5 +15,6 @@ module.exports.options = {
 module.exports.run = async (CLIENT, interaction) => {
   const GUILD = interaction.guild;
   //let logChannel = interaction.options['logchannel'].value;
-  await DataBaseAccess.addGuild(GUILD);
+  await guildDB.add(GUILD);
+  interaction.reply('Added this guild to my database');
 }

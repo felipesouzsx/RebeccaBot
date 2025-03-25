@@ -1,4 +1,4 @@
-const DataBaseAccess = require('../../database/dbAccess.js');
+const guildDB = require('../../database/guild.js');
 
 module.exports.staffCommand = true;
 module.exports.description = 'Lista algumas informações';
@@ -12,7 +12,7 @@ function sendChatMessage(interaction, message) {
 module.exports.run = async (CLIENT, interaction) => {
   interaction.reply('BOT_RSP: Gathering data from database...');
 
-  let guildMembers = await DataBaseAccess.getGuildMembers(interaction.guild.id);
+  let guildMembers = await guildDB.getMembers(interaction.guild.id);
   let memberIds = Object.keys(guildMembers);
   let count = 0;
   let message = '';

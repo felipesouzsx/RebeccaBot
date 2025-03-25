@@ -1,4 +1,4 @@
-const DataBaseAcess = require('../../database/dbAccess.js');
+const guildDB = require('../../database/guild.js');
 
 module.exports.description = 'remove um canal da minha lista de vigia';
 module.exports.staffCommand = true;
@@ -12,5 +12,6 @@ module.exports.options = {
 
 module.exports.run = async (CLIENT, interaction) => {
   let channel = interaction.options.get('channel').value;
-  await DataBaseAcess.removeChannelFromWatchlist(interaction.guild.id, channel);
+  await guildDB.removeChannelFromWatchlist(interaction.guild.id, channel);
+  interaction.reply(`Removed <#${channel}> from the watchlist`);
 }
