@@ -8,12 +8,14 @@ async function getGuildUsers(guildId) {
   return documentData.data().users;
 }
 
+
 async function add(guildId, userId, userData) {
   let guild = await Guild.get(guildId);
   await guild.update({
     [`users.${userId}`]: userData // Javascript sorcery to use template string as key
   })
 }
+
 
 async function remove(guildId, userId) {
   let guild = await Guild.get(guildId);
@@ -22,12 +24,14 @@ async function remove(guildId, userId) {
   })
 }
 
+
 async function edit(guildId, userId, data) {
   let guild = await Guild.get(guildId);
   await guild.update({
     [`users.${userId}`]: data
   })
 }
+
 
 async function get(guildId, userId) {
   let guildUsers = await getGuildUsers(guildId);
