@@ -35,7 +35,7 @@ async function getWatchlist(guildId) {
     .then(async (response) => {
       if (!response.ok) { console.log(`GET_LST: Error ${error}`); return; };
       watchlist = await response.json();
-      console.log(`DBS_RES: ${watchlist}`);
+      console.log(`GET_LST: Response ${watchlist}`);
     });
   } catch(error) { console.log(`GET_LST: Error ${error}`) }
   return watchlist;
@@ -48,7 +48,7 @@ async function addChannelToWatchlist(guildId, channelId) {
     await dbAccess.fetchDatabase(`/guilds/${guildId}/watchlist/${channelId}`, 'POST', data)
     .then(async (response) => {
       if (!response.ok) { console.log(`ADD_LST: Error ${error}`); return; };
-      ;
+      console.log(`ADD_LST: Response ${response}`);
     });
   } catch(error) { console.log(`ADD_LST: Error ${error}`) }
 }
@@ -63,6 +63,7 @@ async function removeChannelFromWatchlist(guildId, channelId) {
     });
   } catch(error) { console.log(`RMV_CHL: Error ${error}`); }
 }
+
 
 async function getMembers(guildId) {
   let members = {};

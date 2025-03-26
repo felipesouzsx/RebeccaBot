@@ -1,4 +1,4 @@
-const guildDB = require('../../database/guild.js');
+const guildDB = require('../../database/guildDb.js');
 
 module.exports.description = 'remove um canal da minha lista de vigia';
 module.exports.staffCommand = true;

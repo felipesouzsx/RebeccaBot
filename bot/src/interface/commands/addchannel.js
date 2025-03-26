@@ -1,4 +1,4 @@
-const guildDB = require('../../database/guild.js');
+const guildDB = require('../../database/guildDb.js');
 
 
 module.exports.description = 'adiciona um canal pra eu ficar de olho';

@@ -1,4 +1,4 @@
-const guildDB = require('../../database/guild.js');
+const guildDB = require('../../database/guildDb.js');
 
 module.exports.staffCommand = true;
 module.exports.description = 'Lista algumas informações';
