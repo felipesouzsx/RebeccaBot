@@ -14,6 +14,9 @@ importers:
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
+      node-cache:
+        specifier: ^5.1.2
+        version: 5.1.2
 
 packages:
 
@@ -67,6 +70,10 @@ packages:
     resolution: {integrity: sha512-RaI5qZo6D2CVS6sTHFKg1v5Ohq/+Bo2LZ5gzUEwZ/WkHhwtGTCB/sVLw8ijOkAUxasZ+WshN/Rzj4ywsABJ5ZA==}
     engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
 
+  clone@2.1.2:
+    resolution: {integrity: sha512-3Pe/CF1Nn94hyhIYpjtiLhdCoEoz0DqQ+988E9gmeEdQZlojxnOb74wctFyuwWQHzqyf9X7C7MG8juUpqBJT8w==}
+    engines: {node: '>=0.8'}
+
   discord-api-types@0.37.119:
     resolution: {integrity: sha512-WasbGFXEB+VQWXlo6IpW3oUv73Yuau1Ig4AZF/m13tXcTKnMpc/mHjpztIlz4+BM9FG9BHQkEXiPto3bKduQUg==}
 
@@ -89,6 +96,10 @@ packages:
 
   magic-bytes.js@1.10.0:
     resolution: {integrity: sha512-/k20Lg2q8LE5xiaaSkMXk4sfvI+9EGEykFS4b0CHHGWqDYU0bGUFSwchNOMA56D7TCs9GwVTkqe9als1/ns8UQ==}
+
+  node-cache@5.1.2:
+    resolution: {integrity: sha512-t1QzWwnk4sjLWaQAS8CHgOJ+RAfmHpxFWmc36IWTiWHQfs0w5JDMBS1b1ZxQteo0vVVuWJvIUKHDkkeK7vIGCg==}
+    engines: {node: '>= 8.0.0'}
 
   ts-mixer@6.0.4:
     resolution: {integrity: sha512-ufKpbmrugz5Aou4wcr5Wc1UUFWOLhq+Fm6qa6P0w0K5Qw2yhaUoiWszhCVuNQyNwrlGiscHOmqYoAox1PtvgjA==}
@@ -183,6 +194,8 @@ snapshots:
 
   '@vladfrangu/async_event_emitter@2.4.6': {}
 
+  clone@2.1.2: {}
+
   discord-api-types@0.37.119: {}
 
   discord.js@14.18.0:
@@ -212,6 +225,10 @@ snapshots:
   lodash@4.17.21: {}
 
   magic-bytes.js@1.10.0: {}
+
+  node-cache@5.1.2:
+    dependencies:
+      clone: 2.1.2
 
   ts-mixer@6.0.4: {}
 

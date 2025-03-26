@@ -8,36 +8,25 @@ async function add(Guild) {
   try {
     const members = await discordUtils.getGuildMembers(Guild);
     const data = JSON.stringify(members);
-    await dbAccess.fetchDatabase(`/guilds/${Guild.id}`, 'POST', data)
-    .then(async (response) => {
-      if (!response.ok) { console.log(`ADD_GLD: Error ${error}`); return }
-      console.log(`ADD_GLD: ${Guild.id} : ${data}`);
-    });
+    dbAccess.fetchDatabase(`/guilds/${Guild.id}`, 'POST', data);
   } catch(error) { console.log(`ADD_GLD: Error ${error}`) }
 }
 
 
 async function remove(guildId) {
   try {
-    await dbAccess.fetchDatabase(`/guilds/${guildId}`, 'DELETE')
-    .then(async (response) => {
-      if (!response.ok) { console.log(`RMV_GLD: Error ${error}`); return }
-      console.log(`RMV_GLD: ${guildId}`);
-    });
-  } catch(error) { console.log(`RMV_GLD: Error ${error}`) }
+    dbAccess.fetchDatabase(`/guilds/${guildId}`, 'DELETE');
+  } catch(error) { 
+    console.log(`RMV_GLD: Error ${error}`) 
+  }
 }
 
 
 async function getWatchlist(guildId) {
   let watchlist = [];
   try {
-    await dbAccess.fetchDatabase(`/guilds/${guildId}/watchlist`)
-    .then(async (response) => {
-      if (!response.ok) { console.log(`GET_LST: Error ${error}`); return; };
-      watchlist = await response.json();
-      console.log(`GET_LST: Response ${watchlist}`);
-    });
-  } catch(error) { console.log(`GET_LST: Error ${error}`) }
+    watchlist = (await dbAccess.fetchDatabase(`/guilds/${guildId}/watchlist`)).data;
+  } catch(error) { console.log(`GET_LST: Error ${error} ${error.stack}`) }
   return watchlist;
 }
 
@@ -45,22 +34,14 @@ async function getWatchlist(guildId) {
 async function addChannelToWatchlist(guildId, channelId) {
   try {
     let data = JSON.stringify({'channelId': channelId});
-    await dbAccess.fetchDatabase(`/guilds/${guildId}/watchlist/${channelId}`, 'POST', data)
-    .then(async (response) => {
-      if (!response.ok) { console.log(`ADD_LST: Error ${error}`); return; };
-      console.log(`ADD_LST: Response ${response}`);
-    });
+    dbAccess.fetchDatabase(`/guilds/${guildId}/watchlist/${channelId}`, 'POST', data);
   } catch(error) { console.log(`ADD_LST: Error ${error}`) }
 }
 
 
 async function removeChannelFromWatchlist(guildId, channelId) {
   try {
-    await dbAccess.fetchDatabase(`/guilds/${guildId}/watchlist/${channelId}`, 'DELETE')
-    .then(async (response) => {
-      if (!response.ok) { console.log(`RMV_CHL: Error ${response.status}`); return; };
-      console.log(`RMV_CHL: ${response.status}`);
-    });
+    dbAccess.fetchDatabase(`/guilds/${guildId}/watchlist/${channelId}`, 'DELETE');
   } catch(error) { console.log(`RMV_CHL: Error ${error}`); }
 }
 
@@ -68,12 +49,8 @@ async function removeChannelFromWatchlist(guildId, channelId) {
 async function getMembers(guildId) {
   let members = {};
   try {
-    await dbAccess.fetchDatabase(`/guilds/${guildId}/users`)
-    .then(async (response) => {
-      if (!response.ok) { console.log(`GET_MBR: Error ${response.status}`); return; };
-      members = await response.json();
-    });
-  } catch(error) { console.log(`GET_MBR: Error ${error}`) }
+    members = (await dbAccess.fetchDatabase(`/guilds/${guildId}/users`)).data;
+  } catch(error) { console.log(`GET_MBR: Error ${error}${error.stack}`) }
   return members;
 }
 

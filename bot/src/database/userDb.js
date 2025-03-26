@@ -11,11 +11,7 @@ async function add(guildId, userId, User) {
   try {
     let userJson = User.getJson();
     let stringData = JSON.stringify(userJson);
-    await dbAccess.fetchDatabase(`/guilds/${guildId}/users/${userId}`,'POST', stringData)
-    .then((response) => {
-      console.log(`ADD_USR: Added user ${userJson.username} to database`);
-      printResponse(response);
-    })
+    dbAccess.fetchDatabase(`/guilds/${guildId}/users/${userId}`,'POST', stringData)
   } catch(error) { printError(error) }
 }
 
@@ -24,9 +20,7 @@ async function edit(guildId, userId, User) {
   let userJson = User.getJson();
   let jsonData = JSON.stringify(userJson);
   try {
-    await dbAccess.fetchDatabase(`/guilds/${guildId}/users/${userId}`, 'PUT', jsonData).then(
-      (response) => { printResponse(response) }
-    );
+    dbAccess.fetchDatabase(`/guilds/${guildId}/users/${userId}`, 'PUT', jsonData);
   } catch(error) { printError(error) }
 }
 
