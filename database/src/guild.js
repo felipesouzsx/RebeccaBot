@@ -4,10 +4,6 @@ const admin = require('firebase-admin');
 
 async function get(guildId) {
   const guildDocument = await db.collection('guilds').doc(guildId);
-  cache[guildId] = {
-    timestamp: Math.floor(Date.now() / 1000), // to unix timestamp
-    doc: guildDocument
-  }
   return guildDocument;
 }
 

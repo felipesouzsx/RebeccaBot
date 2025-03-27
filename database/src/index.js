@@ -41,6 +41,13 @@ app.get('/guilds/:guildId/users/:userId', async (request, response) => {
   response.type('json');
   response.send(JSON.stringify(user));
 });
+app.get('/guilds/:guildId', async (request, response) => {
+  let guild = await Guild.get(request.params.guildId);
+  let guildDocument = await guild.get();
+  let result = guildDocument.data()
+  response.type('json');
+  response.send(JSON.stringify(result));
+});
 app.get('/guilds/:guildId/users', async (request, response) => {
   let result = await Guild.getUsers(request.params.guildId);
   response.type('json');
