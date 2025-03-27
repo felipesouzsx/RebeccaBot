@@ -36,10 +36,10 @@ app.post('/guilds/:guildId/watchlist/:channelId', async (request, response) => {
 })
 
 
-app.get('/guilds/:guildId/users/:userId', async (request, response) => {
-  let user = await Users.get(request.params.guildId, request.params.userId);
+app.get('/guilds/', async (request, response) => {
+  let result = await Guild.getAll();
   response.type('json');
-  response.send(JSON.stringify(user));
+  response.send(JSON.stringify(result));
 });
 app.get('/guilds/:guildId', async (request, response) => {
   let guild = await Guild.get(request.params.guildId);
@@ -52,6 +52,11 @@ app.get('/guilds/:guildId/users', async (request, response) => {
   let result = await Guild.getUsers(request.params.guildId);
   response.type('json');
   response.send(JSON.stringify(result));
+});
+app.get('/guilds/:guildId/users/:userId', async (request, response) => {
+  let user = await Users.get(request.params.guildId, request.params.userId);
+  response.type('json');
+  response.send(JSON.stringify(user));
 });
 app.get('/guilds/:guildId/watchlist', async (request, response) => {
   let result = await Guild.getWatchlist(request.params.guildId);

@@ -8,6 +8,16 @@ async function get(guildId) {
 }
 
 
+async function getAll() {
+  const guildCollection = await db.collection('guilds');
+  const guilds = await guildCollection.get()
+  const guildIds = guilds.docs.map((value) => {
+    return value.id;
+  })
+  return guildIds;
+}
+
+
 async function getUsers(guildId) {
   let guild = await get(guildId);
   let guildDocument = await guild.get();
@@ -55,6 +65,6 @@ async function getWatchlist(guildId) {
 
 
 module.exports = { 
-  get, add, remove, getUsers, 
+  get, getAll, add, remove, getUsers, 
   addChannelToWatchlist, removeChannelFromWatchlist, getWatchlist
 }
