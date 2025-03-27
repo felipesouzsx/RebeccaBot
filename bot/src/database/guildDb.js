@@ -13,6 +13,24 @@ async function add(Guild) {
 }
 
 
+async function get(guildId) {
+  let guildData = {};
+  try {
+    guildData = (await dbAccess.fetchDatabase(`/guilds/${guildId}`)).data;
+  } catch(error) { console.log(`GET_GLD: Error ${error}`) }
+  return guildData;
+}
+
+
+async function getAllGuilds() {
+  let guilds = []
+  try {
+    guilds = (await dbAccess.fetchDatabase(`/guilds`)).data;
+  } catch(error) { console.log(`GET_GDS: Error ${error}`) }
+  return guilds;
+}
+
+
 async function remove(guildId) {
   try {
     dbAccess.fetchDatabase(`/guilds/${guildId}`, 'DELETE');
@@ -58,7 +76,7 @@ async function getMembers(guildId) {
 
 
 module.exports = { 
-  add, remove, 
+  add, remove, get, getAllGuilds,
   getWatchlist, addChannelToWatchlist, removeChannelFromWatchlist,
-  getMembers 
+  getMembers
 }

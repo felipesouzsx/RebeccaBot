@@ -2,7 +2,7 @@ require('dotenv').config();
 const NodeCache = require('node-cache');
 
 
-const Cache = new NodeCache({stdTTL: 10}); // How long cache lasts in seconds
+const Cache = new NodeCache({stdTTL: 120}); // How long cache lasts in seconds
 
 
 async function fetchDatabase(url, method='GET', body=null) {

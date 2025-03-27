@@ -1,5 +1,6 @@
 
 const SECONDS_IN_A_DAY = 86400;
+const SECONDS_IN_A_MONTH = SECONDS_IN_A_DAY * 30;
 
 
 function getCurrentTimestamp() {
