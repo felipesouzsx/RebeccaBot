@@ -1,24 +1,19 @@
 const { workerData, parentPort } = require('worker_threads');
-const guildDb = require('../database/guildDb.js');
-const { SECONDS_IN_A_DAY, SECONDS_IN_A_MONTH, getCurrentTimestamp } = require('../util/timeUtil.js')
+const { SECONDS_IN_A_DAY, getCurrentTimestamp } = require('../util/timeUtil.js')
 
 
 const NOW = getCurrentTimestamp();
 const INACTIVITY_TOLERANCE_DAYS = 0.93;
+const inactiveUsers = [];
 
 
-async function getGuildData(guildId) {
-  let data = await guildDb.get(guildId);
-  return data;
+async function getInactiveUsers(guildUsers) {
+  Object.values(guildUsers).forEach((user) => {
+    let timeDifferenceDays = (NOW - user.lastMessageTimestamp) / SECONDS_IN_A_DAY;
+    if (timeDifferenceDays < INACTIVITY_TOLERANCE_DAYS) { return }
+    inactiveUsers.push(user);
+  })
+  parentPort.postMessage(inactiveUsers);
 }
 
-
-getGuildData(workerData.guildId).then((guildData) => {
-  Object.values(guildData.users).forEach((user) => {
-    let timeDifferenceDays = (NOW - user.lastMessageTimestamp) / SECONDS_IN_A_DAY;
-    if (timeDifferenceDays > INACTIVITY_TOLERANCE_DAYS) {
-      
-    }
-  })
-})
-
+getInactiveUsers(workerData.guildUsers);

@@ -1,20 +1,25 @@
 const { Worker } = require('worker_threads');
 const guildDb = require('../database/guildDb.js');
-const { setTimeout } = require('node:timers/promises');
-const { SECONDS_IN_A_DAY, SECONDS_IN_A_MONTH } = require('../util/timeUtil.js');
 
 
-const SECONDS_BETWEEN_CHECKS = 30;
+const SECONDS_BETWEEN_CHECKS = 10;
 
 
-function createWorker(guildId) {
+async function getGuildUsers(guildId) {
+  let data = await guildDb.get(guildId);
+  return data.users;
+}
+
+
+async function createWorker(guildId) {
+  const guildUsers = await getGuildUsers(guildId);
+
   return new Promise((resolve, reject) => {
     const worker = new Worker('./src/controller/checkGuild.js', {
-      workerData: { guildId: guildId }
+      workerData: { guildUsers: guildUsers }
     });
-
-    worker.on('exit', (exitCode) => {
-      resolve(exitCode);
+    worker.on('message', (inactiveUsers) => {
+      resolve(inactiveUsers);
     });
     worker.on('error', (error) => {
       reject(`GLD_CHK: Error ${error}`);
@@ -22,19 +27,21 @@ function createWorker(guildId) {
   })
 }
 
-function checkGuilds() {
-  guildDb.getAllGuilds().then((guilds) => {
-    guilds.forEach((guildId) => {
-      createWorker(guildId)
-      .then(() => {
-        console.log(`GLD_SCH: Checked guild ${guildId}`);
-      })
-      .catch((error) => {
-        console.log(`GLD_SCH: Error ${error}`);
-      });
+
+async function checkGuilds() {
+  const guilds = await guildDb.getAllGuilds();
+
+  guilds.forEach((guildId) => {
+    createWorker(guildId)
+    .then((inactiveUsers) => {
+      console.log(`GLD_SCH: Checked guild ${guildId}`);
     })
+    .catch((error) => {
+      console.log(`GLD_SCH: Error ${error}`);
+    });
   })
 }
+
 
 setInterval(() => {
   checkGuilds();
