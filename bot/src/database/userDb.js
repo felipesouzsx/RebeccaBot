@@ -1,10 +1,9 @@
 const dbAccess = require('./dbAccess.js');
-const discordUtils = require('../util/discordUtil.js');
+const { User } = require('../util/discordUtil.js');
 
 
 
 function printError(error) { console.log(`DBS_USR: Error ${error}`) }
-function printResponse(response) { console.log(`DBS_USR: Response ${response.status}`) }
 
 
 async function add(guildId, userId, User) {
@@ -25,4 +24,15 @@ async function edit(guildId, userId, User) {
 }
 
 
-module.exports = { add, edit };
+async function get(guildId, userId) {
+  let result;
+  let data = {};
+  try {
+    data = (await dbAccess.fetchDatabase(`/guilds/${guildId}/users/${userId}`)).data;
+    result = new User(data.username, data.lastMessageTimestamp);
+  } catch(error) { printError(error) }
+  return result;
+}
+
+
+module.exports = { get, add, edit };

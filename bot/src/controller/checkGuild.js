@@ -9,6 +9,7 @@ const inactiveUsers = [];
 
 async function getInactiveUsers(guildUsers) {
   Object.values(guildUsers).forEach((user) => {
+    if (user.protected) { return }
     let timeDifferenceDays = (NOW - user.lastMessageTimestamp) / SECONDS_IN_A_DAY;
     if (timeDifferenceDays < INACTIVITY_TOLERANCE_DAYS) { return }
     inactiveUsers.push(user);

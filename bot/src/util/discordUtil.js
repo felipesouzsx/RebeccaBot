@@ -11,11 +11,13 @@ class User {
   constructor(username, lastMessageTimestamp) {
     this.username = username;
     this.lastMessageTimestamp = lastMessageTimestamp;
+    this.protected = false;
   }
 
   getJson() {
     return {
       username: this.username,
+      protected: this.protected,
       lastMessageTimestamp: this.lastMessageTimestamp
     }
   }
