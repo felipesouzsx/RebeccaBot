@@ -15,8 +15,7 @@ module.exports.options = {
 module.exports.run = async (CLIENT, interaction) => {
   let userId = interaction.options.get('user').value;
   let User = await userDb.get(interaction.guild.id, userId);
-  User.protected = true;
+  User.protected = false;
   await userDb.edit(interaction.guild.id, userId, User);
-  console.log(User);
-  interaction.reply(`${User.username} is now protected`);
+  interaction.reply(`${User.username} is no longer protected`);
 }
