@@ -2,7 +2,8 @@ module.exports = async (CLIENT) => {
   CLIENT.user.setActivity('Cyberpunk 2077');
   console.log('BOT_STS: Online');
   await registerCommands(CLIENT);
-  require('../../controller/guildCheckScheduler.js');
+  let guildCheckScheduler = require('../../controller/guildCheckScheduler.js');
+  guildCheckScheduler.setClient(CLIENT);
 }
 
 
