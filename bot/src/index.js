@@ -4,7 +4,7 @@ require('dotenv').config();
 
 
 const CLIENT = new Client({
-  intents: [ GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences ],
+  intents: [ GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences, GatewayIntentBits.GuildVoiceStates ],
   partials: [ Partials.GuildMember ]
 })
 CLIENT.commands = {};
@@ -27,6 +27,16 @@ FileSystem.readdir('./src/interface/events/', (error, files) => {
 // Almost the same thing as above, but for commands. Each module also has
 // special properties, such as command options, that allow me to configure the
 // commands here. Unlike events, commands can be named anything I want.
+// List of valid options:
+// https://discord.js.org/docs/packages/discord.js/14.18.0/SlashCommandBuilder:Class
+// (warning: remove "add" from the name. So instead of
+// "addChannelOption", just name use "ChannelOption".)
+// Example: 
+//     channel: {
+//      type: 'ChannelOption',
+//      description: 'example',
+//      required: true
+//     }
 FileSystem.readdir('./src/interface/commands/', (error, files) => {
   if (error) { return console.log(`FIL_ERR: ${error} : ${error.stack}`); }
   files.forEach((file) => {
