@@ -1,3 +1,6 @@
+const { EmbedBuilder } = require('discord.js');
+
+
 class Guild {
   constructor(Guild) {
     this.members = members;
@@ -40,7 +43,15 @@ async function getGuildMembers(Guild) {
 }
 
 
+function createEmbed(gifUrl=null, color='#aff6ea') {
+  var newEmbed = new EmbedBuilder().setColor(color);
+  if (gifUrl) { newEmbed.setImage(gifUrl) }
+  return newEmbed;
+}
+
+
 module.exports = {
   getGuildMembers,
+  createEmbed,
   Guild, User
 }

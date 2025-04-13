@@ -1,7 +1,8 @@
 const userDb = require('../../database/userDb.js');
+const { getReply } = require('../../util/replyUtil.js');
 
 
-module.exports.description = 'proteje um usuário de ser expulso por inatividade';
+module.exports.description = 'Proteje um usuário de ser expulso por inatividade.';
 module.exports.staffCommand = true;
 module.exports.options = {
   user: {
@@ -17,6 +18,5 @@ module.exports.run = async (CLIENT, interaction) => {
   let User = await userDb.get(interaction.guild.id, userId);
   User.protected = true;
   await userDb.edit(interaction.guild.id, userId, User);
-  console.log(User);
-  interaction.reply(`${User.username} is now protected`);
+  interaction.reply(getReply(`${User.username} agora está protegido`));
 }
