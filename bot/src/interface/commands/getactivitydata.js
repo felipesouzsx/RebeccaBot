@@ -12,10 +12,6 @@ var currentIndex = 0;
 var guildMembers;
 
 
-function sendChatMessage(interaction, message) {
-  interaction.guild.channels.cache.get(interaction.channelId).send(message);
-}
-
 function createButton(id, emoji) {
   return (
     new ButtonBuilder()
@@ -24,7 +20,6 @@ function createButton(id, emoji) {
       .setStyle(ButtonStyle.Primary)
   )
 }
-
 
 
 function getMemberList(page=0) {
@@ -58,7 +53,7 @@ function getMemberList(page=0) {
   }
   
 
-  let reply = getReply(`Estado de atividade dos membros: `);
+  let reply = getReply(`Estado de atividade dos membros: `, ReplyTypes.NORMAL, null, true);
   let embed = reply.embeds[0];
   reply.components = [row];
   embed.setDescription(`Total de membros: ${memberIds.length}\n\n${message}`);
