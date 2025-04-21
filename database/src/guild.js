@@ -11,9 +11,7 @@ async function get(guildId) {
 async function getAll() {
   const guildCollection = await db.collection('guilds');
   const guilds = await guildCollection.get()
-  const guildIds = guilds.docs.map((value) => {
-    return value.id;
-  })
+  const guildIds = guilds.docs.map((value) => { return value.id })
   return guildIds;
 }
 
@@ -21,50 +19,32 @@ async function getAll() {
 async function getUsers(guildId) {
   let guild = await get(guildId);
   let guildDocument = await guild.get();
-  return guildDocument.data().users;
+  return guildDocument.exists ? guildDocument.data().users : undefined;
 }
 
 
 async function add(guildId, users) {
   let guild = await get(guildId);
-  await guild.set({'watchlist': []});
-  await guild.set({'users': users});
+  let status = 200; // 200 OK
+  await Promise.all([
+    guild.set({'watchlist': []}),
+    guild.set({'users': users})
+  ]).catch(error => status = 500);
+  return status;
 }
 
 
 async function remove(guildId) {
-  // todo: fail to write -> please mouse over recursiveDelete and scroll down
+  let status = 204; // 204 DELETED
   let guild = await get(guildId);
-  await db.recursiveDelete(guild).then(
-    (response) => {
-      console.log(response);
-    }
-  );
-}
 
-async function addChannelToWatchlist(guildId, channelId) {
-  let guild = await get(guildId);
-  await guild.update({
-    watchlist: admin.firestore.FieldValue.arrayUnion(channelId) // Append to array field
-  });
-}
-
-async function removeChannelFromWatchlist(guildId, channelId) {
-  let guild = await get(guildId);
-  await guild.update({
-    watchlist: admin.firestore.FieldValue.arrayRemove(channelId)
-  });
-}
-
-async function getWatchlist(guildId) {
-  let guild = await get(guildId);
-  let settingsCollection = await guild.get();
-  let watchlist = settingsCollection.data().watchlist;
-  return watchlist;
+  await db.recursiveDelete(guild)
+    .then(response => console.log(response))
+    .catch(error => status = 500);
+  return status;
 }
 
 
 module.exports = { 
-  get, getAll, add, remove, getUsers, 
-  addChannelToWatchlist, removeChannelFromWatchlist, getWatchlist
+  get, getAll, add, remove, getUsers
 }
