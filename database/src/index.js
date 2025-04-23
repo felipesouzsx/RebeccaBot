@@ -15,8 +15,9 @@ function isNumber(num) {
 }
 
 function isValid(input) {
-  console.log(isNumber(input));
-  return (input.length == 18 && isNumber(input));
+  let result = (isNumber(input));
+  console.log(`${result ? 'VLD_' : 'INV_'}PAR: ${input}`);
+  return result;
 }
 
 
