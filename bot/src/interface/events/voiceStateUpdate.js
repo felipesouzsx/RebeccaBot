@@ -11,5 +11,9 @@ module.exports = async (CLIENT, ...args) => {
 
   const nowTimestamp = getCurrentTimestamp();
   const userData = new User(USER.username, nowTimestamp);
-  userDB.edit(NEW_STATE.guild.id, NEW_STATE.id, userData);
+  try {
+    await userDB.edit(NEW_STATE.guild.id, NEW_STATE.id, userData);
+  } catch (error) {
+    console.log(error);
+  }
 }

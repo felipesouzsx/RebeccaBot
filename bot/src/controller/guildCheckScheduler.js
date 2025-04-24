@@ -13,13 +13,25 @@ function setClient(value) {
 
 
 async function getGuildUsers(guildId) {
-  let data = await guildDb.get(guildId);
+  let data = {users: {}};
+  try {
+    data = await guildDb.get(guildId);
+  } catch(error) {
+    throw error;
+  }
   return data.users;
 }
 
 
 async function createWorker(guildId) {
-  const guildUsers = await getGuildUsers(guildId);
+  let guildUsers = {}
+
+  try {
+    guildUsers = await getGuildUsers(guildId);
+  } catch(error) {
+    console.log(`GLD_CHK: Error ${error}`);
+    return;
+  }
 
   return new Promise((resolve, reject) => {
     const worker = new Worker('./src/controller/checkGuild.js', {
@@ -36,9 +48,16 @@ async function createWorker(guildId) {
 
 
 async function checkGuilds() {
-  const guilds = await guildDb.getAllGuilds();
+  let guilds = [];
 
-  guilds.forEach((guildId) => {
+  try {
+    guilds = await guildDb.getAllGuilds();
+  } catch(error) {
+    console.log(error);
+    return;
+  }
+
+  await guilds.forEach((guildId) => {
     createWorker(guildId)
     .then((inactiveUsers) => {
       console.log(`GLD_SCH: Checked guild ${guildId}`);
@@ -49,13 +68,12 @@ async function checkGuilds() {
     .catch((error) => {
       console.log(`GLD_SCH: Error ${error}`);
     });
-  })
+  });
 }
 
 
 setInterval(() => {
   checkGuilds();
-  console.log(`GLD_SCH: Guilds checked.`);
 }, SECONDS_BETWEEN_CHECKS * 1000);
 
 

@@ -1,5 +1,5 @@
 const guildDB = require('../../database/guildDb.js');
-const { getReply } = require('../../util/replyUtil.js');
+const { getReply, getCommandFailReply } = require('../../util/replyUtil.js');
 
 const BYE_GIF = 'https://c.tenor.com/XDGYk0b-MLoAAAAC/tenor.gif';
 
@@ -9,6 +9,12 @@ module.exports.staffCommand = true;
 
 
 module.exports.run = async (CLIENT, interaction) => {
-  await guildDB.remove(interaction.guild.id);
+  try {
+    await guildDB.remove(interaction.guild.id);
+  } catch(error) {
+    console.log(error);
+    interaction.reply(getCommandFailReply());
+    return;
+  }
   interaction.reply(getReply('Tirei este servidor do banco de dados, flws!', 1, BYE_GIF));
 }

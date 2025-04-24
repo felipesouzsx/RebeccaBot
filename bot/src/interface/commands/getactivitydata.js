@@ -1,5 +1,5 @@
 const guildDB = require('../../database/guildDb.js');
-const { getReply, ReplyTypes } = require('../../util/replyUtil.js');
+const { getReply, getCommandFailReply, ReplyTypes } = require('../../util/replyUtil.js');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 
@@ -63,7 +63,12 @@ function getMemberList(page=0) {
 
 
 module.exports.run = async (CLIENT, interaction) => {
-  guildMembers = await guildDB.getMembers(interaction.guild.id);
+  try {
+    guildMembers = await guildDB.getMembers(interaction.guild.id);
+  } catch(error) {
+    interaction.reply(getCommandFailReply());
+    return;
+  }
 
   reply = getMemberList(currentIndex);
   reply.withResponse = true;

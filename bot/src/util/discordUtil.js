@@ -11,7 +11,7 @@ class Guild {
 }
 
 class User {
-  constructor(username, lastMessageTimestamp) {
+  constructor(username = 'unknown', lastMessageTimestamp = 0) {
     this.username = username;
     this.lastMessageTimestamp = lastMessageTimestamp;
     this.protected = false;

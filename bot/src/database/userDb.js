@@ -4,33 +4,33 @@ const { User } = require('../util/discordUtil.js');
 
 
 function printError(error) { console.log(`DBS_USR: Error ${error}`) }
+function getStatusError(status) {
+  return `DBS_USR: Database returned with status ${status}`;
+}
+
 
 
 async function add(guildId, userId, User) {
-  try {
-    let userJson = User.getJson();
-    let stringData = JSON.stringify(userJson);
-    dbAccess.fetchDatabase(`/guilds/${guildId}/users/${userId}`,'POST', stringData)
-  } catch(error) { printError(error) }
+  let userJson = User.getJson();
+  let stringData = JSON.stringify(userJson);
+  let response = dbAccess.fetchDatabase(`/guilds/${guildId}/users/${userId}`,'POST', stringData);
+  if (response.status != 201) { throw getStatusError(response.status) }
 }
 
 
 async function edit(guildId, userId, User) {
   let userJson = User.getJson();
   let jsonData = JSON.stringify(userJson);
-  try {
-    dbAccess.fetchDatabase(`/guilds/${guildId}/users/${userId}`, 'PUT', jsonData);
-  } catch(error) { printError(error) }
+  let response = dbAccess.fetchDatabase(`/guilds/${guildId}/users/${userId}`, 'PUT', jsonData);
+  if (response.status != 200) { throw getStatusError(response.status) }
 }
 
 
 async function get(guildId, userId) {
-  let result;
-  let data = {};
-  try {
-    data = (await dbAccess.fetchDatabase(`/guilds/${guildId}/users/${userId}`)).data;
-    result = new User(data.username, data.lastMessageTimestamp);
-  } catch(error) { printError(error) }
+  let result = new User();
+  let response = await dbAccess.fetchDatabase(`/guilds/${guildId}/users/${userId}`);
+  if (response.status != 200) { throw getStatusError(response.status) }
+  result = new User(response.data.username, response.data.lastMessageTimestamp);
   return result;
 }
 

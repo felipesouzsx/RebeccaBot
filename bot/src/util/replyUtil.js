@@ -1,4 +1,5 @@
 const { createEmbed } = require('./discordUtil.js');
+const { MessageFlags, Message } = require('discord.js');
 
 
 class ReplyTypes {
@@ -23,9 +24,18 @@ function getReply(text, type=1, image = null, ephemeral = false) {
   }
 
   let embed = createEmbed(image, color);
-  embed.setTitle(text);
-  return { embeds: [embed], ephemeral: ephemeral };
+  let flags = []
+
+  if (ephemeral) { flags.push(MessageFlags.Ephemeral) }
+
+  embed.setTitle(text);  
+  return { embeds: [embed], flags: [MessageFlags.Ephemeral] };
 }
 
 
-module.exports = { getReply, ReplyTypes }
+function getCommandFailReply() {
+  return getReply('Comando falhou. Tente novamente mais tarde.', ReplyTypes.ERROR, null, true);
+}
+
+
+module.exports = { getReply, getCommandFailReply, ReplyTypes }

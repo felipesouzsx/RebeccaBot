@@ -14,24 +14,30 @@ async function fetchDatabase(url, method='GET', body=null) {
   }
 
   console.log(`DBS_FCH: Database ${requestUrl}`);
-  let result = {status: 500, data: {}};
+  let result = {status: 503, data: {}};
   const request = {
     method: method,
     headers: { 'Content-Type': 'application/json' },
   };
   if (body != null) { request.body = body }
 
-  await fetch(`${process.env.DATABASE_URL}${url}`, request)
-  .then(async (response) => {
-    try {
-      console.log(`DBS_FCH: Response ${response.status}`) 
-      result.status = response.status;
-      result.data = response.headers.get('Content-Type').startsWith('application/json') ? (await response.json()) : {};
-      if (method == 'GET') { Cache.set(requestUrl, result) }
-    } catch(error) { 
-      console.log(`DBS_FCH: Error ${error} ${error.stack}`) 
-    }
-  })
+  try {
+    await fetch(`${process.env.DATABASE_URL}${url}`, request)
+    .then(async (response) => {
+      try {
+        console.log(`DBS_FCH: Response ${response.status}`) 
+        result.status = response.status;
+        if (response.headers.has('Content-Type') && response.headers.get('Content-Type').startsWith('application/json')) {
+          result.data = await response.json();
+        }
+        if (method == 'GET') { Cache.set(requestUrl, result) }
+      } catch(error) { 
+        console.log(`DBS_FCH: Error ${error} ${error.stack}`) 
+      }
+    })
+  } catch (error) {
+    console.log(`DBS_FCH: Error ${error}`)
+  }
   return result;
 }
 
