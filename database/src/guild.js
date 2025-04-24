@@ -25,7 +25,7 @@ async function getUsers(guildId) {
 
 async function add(guildId, users) {
   let guild = await get(guildId);
-  let status = 200; // 200 OK
+  let status = 201; // 201 CREATED
   await Promise.all([
     guild.set({'watchlist': []}),
     guild.set({'users': users})
@@ -35,11 +35,17 @@ async function add(guildId, users) {
 
 
 async function remove(guildId) {
-  let status = 204; // 204 DELETED
+  let status = 204; // 204 NO CONTENT
   let guild = await get(guildId);
 
+  let allGuilds = await getAll();
+  if (!allGuilds.includes(guildId)) {
+    status = 404;
+    return status;
+  }
+
   await db.recursiveDelete(guild)
-    .then(response => console.log(response))
+    .then(response => console.log(`DLT_RSP: ${response}`))
     .catch(error => status = 500);
   return status;
 }
