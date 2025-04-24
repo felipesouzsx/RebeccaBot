@@ -29,7 +29,7 @@ app.post('/guilds/:guildId', async (request, response) => {
     response.sendStatus(400); // BAD REQUEST
     return;
   }
-  let status = Guild.add(request.params.guildId, request.body);
+  let status = await Guild.add(request.params.guildId, request.body);
   response.sendStatus(status);
   console.log(`ADD_GLD: ${request.params.guildId} : ${status}`);
 });
@@ -39,7 +39,7 @@ app.post('/guilds/:guildId/users/:userId', async (request, response) => {
     response.sendStatus(400); // BAD REQUEST
     return;
   }
-  let status = Users.add(request.params.guildId, request.params.userId, request.body);
+  let status = await Users.add(request.params.guildId, request.params.userId, request.body);
   response.sendStatus(status);
   console.log(`ADD_USR: ${request.params.userId} : ${status}`);
 });
@@ -50,6 +50,7 @@ app.post('/guilds/:guildId/users/:userId', async (request, response) => {
 app.get('/guilds/', async (request, response) => {
   let result = await Guild.getAll();
   response.type('json');
+  response.status(200);
   response.send(JSON.stringify(result));
 });
 
