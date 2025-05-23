@@ -24,16 +24,12 @@ async function fetchDatabase(url, method='GET', body=null) {
   try {
     await fetch(`${process.env.DATABASE_URL}${url}`, request)
     .then(async (response) => {
-      try {
-        console.log(`DBS_FCH: Response ${response.status}`) 
-        result.status = response.status;
-        if (response.headers.has('Content-Type') && response.headers.get('Content-Type').startsWith('application/json')) {
-          result.data = await response.json();
-        }
-        if (method == 'GET') { Cache.set(requestUrl, result) }
-      } catch(error) { 
-        console.log(`DBS_FCH: Error ${error} ${error.stack}`) 
+      console.log(`DBS_FCH: Response ${response.status}`) 
+      result.status = response.status;
+      if (response.headers.has('Content-Type') && response.headers.get('Content-Type').startsWith('application/json')) {
+        result.data = await response.json();
       }
+      if (method == 'GET') { Cache.set(requestUrl, result) }
     })
   } catch (error) {
     console.log(`DBS_FCH: Error ${error}`)
