@@ -84,9 +84,13 @@ app.get('/guilds/:guildId/users/:userId', async (request, response) => {
     return;
   }
   let user = await Users.get(request.params.guildId, request.params.userId);
-  response.type('json'); 
-  response.status(user != undefined ? 200 : 404); // User is undefined if it or the guild doesnt exist
-  response.send(JSON.stringify(user));
+  if (user == undefined) {
+    response.sendStatus(404);
+    return
+  }
+  response.type('json');
+  response.status(200);
+  response.send(JSON.stringify(user))
 });
 
 
