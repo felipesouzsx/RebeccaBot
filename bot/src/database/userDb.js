@@ -3,7 +3,6 @@ const { User } = require('../util/discordUtil.js');
 
 
 
-function printError(error) { console.log(`DBS_USR: Error ${error}`) }
 function getStatusError(status) {
   return `DBS_USR: Database returned with status ${status}`;
 }
@@ -13,7 +12,7 @@ function getStatusError(status) {
 async function add(guildId, userId, User) {
   let userJson = User.getJson();
   let stringData = JSON.stringify(userJson);
-  let response = dbAccess.fetchDatabase(`/guilds/${guildId}/users/${userId}`,'POST', stringData);
+  let response = await dbAccess.fetchDatabase(`/guilds/${guildId}/users/${userId}`,'POST', stringData);
   if (response.status != 201) { throw getStatusError(response.status) }
 }
 
@@ -21,7 +20,7 @@ async function add(guildId, userId, User) {
 async function edit(guildId, userId, User) {
   let userJson = User.getJson();
   let jsonData = JSON.stringify(userJson);
-  let response = dbAccess.fetchDatabase(`/guilds/${guildId}/users/${userId}`, 'PUT', jsonData);
+  let response = await dbAccess.fetchDatabase(`/guilds/${guildId}/users/${userId}`, 'PUT', jsonData);
   if (response.status != 200) { throw getStatusError(response.status) }
 }
 
