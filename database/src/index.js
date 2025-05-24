@@ -16,7 +16,6 @@ function isNumber(num) {
 
 function isValid(input) {
   let result = (isNumber(input));
-  console.log(`${result ? 'VLD_' : 'INV_'}PAR: ${input}`);
   return result;
 }
 
