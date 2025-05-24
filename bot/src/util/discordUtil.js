@@ -30,9 +30,9 @@ class User {
 
 // gets Members from the Discord API, not from the Database.
 async function getGuildMembers(Guild) {
-  const members = Guild.members;
+  const members = await Guild.members.fetch();
   let result = {}
-  members.cache.each(async (guildMember) => {
+  members.each(async (guildMember) => {
     if (guildMember.user.bot) { return; }
     const username = guildMember.user.username;
     const lastMessageTimestamp = Math.floor(Date.now() / 1000);

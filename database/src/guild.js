@@ -11,8 +11,20 @@ async function get(guildId) {
 async function getAll() {
   const guildCollection = await db.collection('guilds');
   const guilds = await guildCollection.get()
-  const guildIds = guilds.docs.map((value) => { return value.id })
-  return guildIds;
+  var guildData = {}
+
+  // await guilds.docs.forEach(async (value) => {
+  //   let guildId = value.id;
+  //   let users = await getUsers(guildId);
+  //   guildData[guildId] = users;
+  // })
+  for (const item of guilds.docs) {
+    let guildId = item.id;
+    let users = await getUsers(guildId);
+    guildData[guildId] = users;
+  }
+
+  return guildData;
 }
 
 
@@ -26,10 +38,8 @@ async function getUsers(guildId) {
 async function add(guildId, users) {
   let guild = await get(guildId);
   let status = 201; // 201 CREATED
-  await Promise.all([
-    guild.set({'watchlist': []}),
-    guild.set({'users': users})
-  ]).catch(error => status = 500);
+  await guild.set({'users': users})
+    .catch(error => status = 500);
   return status;
 }
 
@@ -39,7 +49,8 @@ async function remove(guildId) {
   let guild = await get(guildId);
 
   let allGuilds = await getAll();
-  if (!allGuilds.includes(guildId)) {
+  let guildIds = await Object.keys(allGuilds);
+  if (!guildIds.includes(guildId)) {
     status = 404;
     return status;
   }

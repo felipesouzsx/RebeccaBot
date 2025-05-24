@@ -25,7 +25,7 @@ async function get(guildId) {
 
 
 async function getAllGuilds() {
-  let guilds = []
+  let guilds = {}
   let response = await dbAccess.fetchDatabase(`/guilds`);
   if (response.status != 200) { throw getStatusError(response.status) }
   guilds = response.data;
