@@ -1,6 +1,10 @@
 module.exports = async (CLIENT, guildId, userId) => {
-  let guild = await CLIENT.guilds.cache.get(guildId);
-  let member = await guild.members.cache.get(userId);
-  // member.kick();
-  console.log(`BOT_KCK: Bot kicking user ${member.user.username}`)
+  try {
+    let guild = await CLIENT.guilds.fetch(guildId);
+    let member = await guild.members.fetch(userId);
+
+    console.log(`KCK_USR: ${member.user.username}`)
+  } catch (error) {
+    console.log(`KCK_USR: Error ${error}`)
+  }
 }
