@@ -19,7 +19,7 @@ The bot will kick anyone that:
 
 # Commands
 1. **/addguild:** Adds a server(all its members) to the database.
-2. **/removeguild:** Removes a guild from the database.
+2. **/removeguild:** Removes a server from the database.
 3. **/showactivitydata:** Shows all members and if they're active or not. The following emojis will be next to their names:
    > 🔴 Not active<br>
    > 🟢 Active<br>
