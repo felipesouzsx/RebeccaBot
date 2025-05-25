@@ -1,7 +1,7 @@
 require('dotenv').config();
 const NodeCache = require('node-cache');
 
-const CACHE_LIFETIME_SEC = 30;
+const CACHE_LIFETIME_SEC = 10;
 const Cache = new NodeCache({stdTTL: CACHE_LIFETIME_SEC});
 
 
