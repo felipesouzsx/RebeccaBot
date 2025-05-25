@@ -1,13 +1,14 @@
 const guildDB = require('../../database/guildDb.js');
 const { getReply, getCommandFailReply, ReplyTypes } = require('../../util/replyUtil.js');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { isUserActive } = require('../../util/timeUtil.js');
 
 
 module.exports.staffCommand = true;
 module.exports.description = 'Mostra o estado de atividade de cada membro!';
 
 
-const membersPerPage = 10;
+const membersPerPage = 15;
 var currentIndex = 0;
 var guildMembers;
 
@@ -24,7 +25,6 @@ function createButton(id, emoji) {
 
 function getMemberList(page=0) {
   let memberIds = Object.keys(guildMembers);
-  let count = 0;
   let message = '';
 
   const row = new ActionRowBuilder();
@@ -48,7 +48,8 @@ function getMemberList(page=0) {
       break; 
     }
     let memberData = guildMembers[memberIds[i]]
-    message += memberData.protected ? '🛡️ ' : '🔴 ';
+    activityStatus = isUserActive(memberData) ? '🟢 ' : '🔴 ';
+    message += memberData.protected ? '🛡️ ' : activityStatus;
     message += `${memberData.username} <t:${memberData.lastMessageTimestamp}:R>\n`;
   }
   
@@ -57,7 +58,7 @@ function getMemberList(page=0) {
   let embed = reply.embeds[0];
   reply.components = [row];
   embed.setDescription(`Total de membros: ${memberIds.length}\n\n${message}`);
-  embed.setFooter({ text: `Pág. ${page / 10 + 1}/${pages / 10 + 1}` })
+  embed.setFooter({ text: `Pág. ${Math.ceil(page / membersPerPage) + 1}/${Math.ceil(pages / membersPerPage) + 1}` })
   return reply;
 }
 
