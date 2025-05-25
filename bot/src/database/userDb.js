@@ -17,6 +17,12 @@ async function add(guildId, userId, User) {
 }
 
 
+async function remove(guildId, userId) {
+  let response = await dbAccess.fetchDatabase(`/guilds/${guildId}/users/${userId}`, 'DELETE');
+  if (response.status != 204) { throw getStatusError(response.status) }
+}
+
+
 async function edit(guildId, userId, User) {
   let userJson = User.getJson();
   let jsonData = JSON.stringify(userJson);
@@ -34,4 +40,4 @@ async function get(guildId, userId) {
 }
 
 
-module.exports = { get, add, edit };
+module.exports = { get, add, remove, edit };
