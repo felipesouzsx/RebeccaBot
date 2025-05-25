@@ -10,6 +10,9 @@ const server = app.listen(process.env.PORT, () => {
   console.log(`SVR_STS: Online. Listening at ${process.env.URL}:${process.env.PORT}`);
 });
 
+
+
+
 function isNumber(num) {
   return (!isNaN(parseFloat(num)) && isFinite(num));
 }
@@ -20,8 +23,15 @@ function isValid(input) {
 }
 
 
-
 // HTTP requests
+
+
+// Simple get request so i can check if this is online or nah
+app.get('/', (request, response) => {
+  response.sendStatus(200);
+})
+
+
 
 app.post('/guilds/:guildId', async (request, response) => {
   if (!isValid(request.params.guildId)) {
