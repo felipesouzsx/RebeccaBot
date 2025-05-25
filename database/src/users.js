@@ -11,7 +11,7 @@ async function getGuildUsers(guildId) {
 
 async function add(guildId, userId, userData) {
   let guild = await Guild.get(guildId);
-  let status = 200;
+  let status = 201;
   await guild.update({[`users.${userId}`]: userData}) // JS sorcery to use template string as key
     .catch((reason) => status = 500);
   return status;
