@@ -14,17 +14,15 @@ async function checkGuilds() {
   let guilds = workerData.guilds;
 
   Object.keys(guilds).forEach((guildId) => {
-    Object.keys(guilds[guildId]).forEach(async (memberId) => {
-      try {
-        let user = await userDb.get(guildId, memberId);
-        if (user.protected) { return }
-        if (isUserActive(user)) { return }
-        parentPort.postMessage({'type': 0, 'userId': memberId, 'guildId': guildId})
-      } catch (error) {
-        console.log(`GLD_CHK: Guild ${guildId} Member ${memberId} Error ${error}`);
-      }
+    let guildMembers = guilds[guildId]
+    Object.keys(guildMembers).forEach((memberId) => {
+      let user = guilds[guildId][memberId];
+      if (user.protected) { return }
+      if (isUserActive(user)) { return }
+      parentPort.postMessage({'type': 0, 'userId': memberId, 'guildId': guildId})
     })
   })
+
   parentPort.postMessage({'type': 1});
 }
 
