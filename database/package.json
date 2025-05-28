@@ -11,6 +11,8 @@
   "author": "Felipe de Souza",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
     "firebase-admin": "^13.2.0"
   },
   "pnpm": {
