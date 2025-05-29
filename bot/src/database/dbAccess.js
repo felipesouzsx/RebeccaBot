@@ -17,6 +17,7 @@ async function fetchDatabase(url, method='GET', body=null, cache=true) {
   const request = {
     method: method,
     headers: { 'Content-Type': 'application/json' },
+    cache: 'no-store' // I have my own caching solution
   };
   if (body != null) { request.body = body }
 
