@@ -22,7 +22,6 @@ function create_worker(CLIENT, guilds) {
         kickUser(CLIENT, guildId, inactiveUserId);
         break;
       case 1: // WHEN CHECK IS DONE
-        console.log('GLD_CHK: Check finished');
         updateWorkerGuildArray(worker);
         break;
     }
