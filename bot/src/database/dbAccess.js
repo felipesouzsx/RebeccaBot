@@ -5,12 +5,15 @@ const CACHE_LIFETIME_SEC = 10;
 const Cache = new NodeCache({stdTTL: CACHE_LIFETIME_SEC});
 
 
-async function fetchDatabase(url, method='GET', body=null, cache=true) {
-  const requestUrl = `${url}:${method}`;
+async function fetchDatabase(url, method='GET', body=null) {
+  // PUT requests erase cached data
+  if (method === 'PUT') {
+    Cache.del(url);
+  }
 
   // Cache only saves GET requests
-  if (Cache.has(requestUrl) && cache) {
-    return Cache.get(requestUrl);
+  if (Cache.has(url)) {
+    return Cache.get(url);
   }
 
   let result = {status: 503, data: {}};
@@ -28,7 +31,7 @@ async function fetchDatabase(url, method='GET', body=null, cache=true) {
       if (response.headers.has('Content-Type') && response.headers.get('Content-Type').startsWith('application/json')) {
         result.data = await response.json();
       }
-      if (method == 'GET') { Cache.set(requestUrl, result) }
+      if (method == 'GET') { Cache.set(url, result) }
     })
   } catch (error) {
     console.log(`DBS_FCH: Error ${error}`)
@@ -37,4 +40,9 @@ async function fetchDatabase(url, method='GET', body=null, cache=true) {
 }
 
 
-module.exports = { fetchDatabase };
+function deleteFromCache(url) {
+  Cache.del(url);
+}
+
+
+module.exports = { fetchDatabase, deleteFromCache };
