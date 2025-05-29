@@ -11,18 +11,17 @@ class Guild {
 }
 
 class User {
-  constructor(username = 'unknown', lastMessageTimestamp = 0) {
-    this.username = username;
-    this.lastMessageTimestamp = lastMessageTimestamp;
+  constructor(props) {
     this.protected = false;
+    this.lastMessageTimestamp = 0;
+    this.username = "unknown";
+    this.id = "unknown";
+    Object.assign(this, props);
   }
-
   getJson() {
-    return {
-      username: this.username,
-      protected: this.protected,
-      lastMessageTimestamp: this.lastMessageTimestamp
-    }
+    let json = structuredClone(this);
+    let {id, ...result} = json; // Using destructuring to remove id property
+    return structuredClone(result);
   }
 }
 
@@ -35,9 +34,14 @@ async function getGuildMembers(Guild) {
   members.each(async (guildMember) => {
     if (guildMember.user.bot) { return; }
     const username = guildMember.user.username;
+    const id = guildMember.user.id;
     const lastMessageTimestamp = Math.floor(Date.now() / 1000);
-    let userData = new User(username, lastMessageTimestamp);
-    result[guildMember.user.id] = userData.getJson();
+    let NewUser = new User({
+      'username': username, 
+      'lastMessageTimestamp': lastMessageTimestamp,
+      'id': id
+    });
+    result[id] = NewUser.getJson();
   });
   return result;
 }

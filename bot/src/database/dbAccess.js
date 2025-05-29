@@ -8,6 +8,7 @@ const Cache = new NodeCache({stdTTL: CACHE_LIFETIME_SEC});
 async function fetchDatabase(url, method='GET', body=null, cache=true) {
   const requestUrl = `${url}:${method}`;
 
+  // Cache only saves GET requests
   if (Cache.has(requestUrl) && cache) {
     return Cache.get(requestUrl);
   }

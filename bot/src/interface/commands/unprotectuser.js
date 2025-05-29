@@ -1,6 +1,5 @@
 const userDb = require('../../database/userDb.js');
 const { getReply, getCommandFailReply } = require('../../util/replyUtil.js');
-const { User } = require('../../util/discordUtil.js');
 
 
 module.exports.description = 'Tira a proteção de um usuário.';
@@ -16,7 +15,7 @@ module.exports.options = {
 
 module.exports.run = async (CLIENT, interaction) => {
   let userId = interaction.options.get('user').value;
-  let user = new User();
+  let user;
 
   try {
     user = await userDb.get(interaction.guild.id, userId);
@@ -27,8 +26,9 @@ module.exports.run = async (CLIENT, interaction) => {
   }
   
   user.protected = false;
+  
   try {
-    await userDb.edit(interaction.guild.id, userId, user);
+    await userDb.edit(interaction.guild.id, user);
   } catch(error) {
     console.log(error);
     interaction.reply(getCommandFailReply());

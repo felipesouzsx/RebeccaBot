@@ -1,16 +1,25 @@
 const userDB = require('../../database/userDb.js');
 const timeUtil = require('../../util/timeUtil.js');
-const { User } = require('../../util/discordUtil.js');
 
 
 module.exports = async (CLIENT, ...args) => {
   const message = args[0];
   if (message.author.bot) { return }
 
-  const nowTimestamp = timeUtil.getCurrentTimestamp();
-  const user = new User(message.author.username, nowTimestamp);
+  const NOW = timeUtil.getCurrentTimestamp();
+  let User;
+
   try {
-    await userDB.edit(message.guildId, message.author.id, user);
+    User = await userDB.get(message.guildId, message.author.id);
+  } catch (error) {
+    console.log(`MSG_CRT: Error when fetching user: ${error}`);
+    return;
+  }
+
+  User.lastMessageTimestamp = NOW;
+  
+  try {
+    await userDB.edit(message.guildId, User);
   } catch(error) {
     console.log(error);
   }

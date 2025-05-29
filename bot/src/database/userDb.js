@@ -9,10 +9,10 @@ function getStatusError(status) {
 
 
 
-async function add(guildId, userId, User) {
+async function add(guildId, User) {
   let userJson = User.getJson();
   let stringData = JSON.stringify(userJson);
-  let response = await dbAccess.fetchDatabase(`/guilds/${guildId}/users/${userId}`,'POST', stringData);
+  let response = await dbAccess.fetchDatabase(`/guilds/${guildId}/users/${User.id}`,'POST', stringData);
   if (response.status != 201) { throw getStatusError(response.status) }
 }
 
@@ -23,19 +23,25 @@ async function remove(guildId, userId) {
 }
 
 
-async function edit(guildId, userId, User) {
+async function edit(guildId, User) {
   let userJson = User.getJson();
   let jsonData = JSON.stringify(userJson);
-  let response = await dbAccess.fetchDatabase(`/guilds/${guildId}/users/${userId}`, 'PUT', jsonData);
+  console.log(userJson)
+  let response = await dbAccess.fetchDatabase(`/guilds/${guildId}/users/${User.id}`, 'PUT', jsonData);
   if (response.status != 200) { throw getStatusError(response.status) }
 }
 
 
 async function get(guildId, userId) {
-  let result = new User();
-  let response = await dbAccess.fetchDatabase(`/guilds/${guildId}/users/${userId}`);
+  let response = await dbAccess.fetchDatabase(
+    `/guilds/${guildId}/users/${userId}`, 
+    'GET',
+    undefined,
+    false
+  );
   if (response.status != 200) { throw getStatusError(response.status) }
-  result = new User(response.data.username, response.data.lastMessageTimestamp);
+  response.data["id"] = userId
+  let result = new User(response.data);
   return result;
 }
 
