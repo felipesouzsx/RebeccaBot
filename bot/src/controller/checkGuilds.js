@@ -1,6 +1,5 @@
 const { workerData, parentPort } = require('worker_threads');
 const { isUserActive } = require('../util/timeUtil.js');
-const userDb = require('../database/userDb.js');
 
 
 const SECONDS_BETWEEN_CHECKS = 5;
