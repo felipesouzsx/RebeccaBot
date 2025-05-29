@@ -63,4 +63,9 @@ FileSystem.readdir('./src/interface/commands/', (error, files) => {
 
 
 // Connecting to discord
-CLIENT.login(process.env.TOKEN);
+let token = process.env.TOKEN;
+if (process.env.DEV) {
+  console.log('\nEntering as developer\n');
+  token = process.env.DEV_TOKEN;
+}
+CLIENT.login(token);
