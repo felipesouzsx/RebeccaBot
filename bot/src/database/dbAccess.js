@@ -5,10 +5,10 @@ const CACHE_LIFETIME_SEC = 10;
 const Cache = new NodeCache({stdTTL: CACHE_LIFETIME_SEC});
 
 
-async function fetchDatabase(url, method='GET', body=null) {
+async function fetchDatabase(url, method='GET', body=null, cache=true) {
   const requestUrl = `${url}:${method}`;
 
-  if (Cache.has(requestUrl)) {
+  if (Cache.has(requestUrl) && cache) {
     return Cache.get(requestUrl);
   }
 
