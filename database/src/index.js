@@ -5,7 +5,18 @@ require('dotenv').config();
 
 
 const app = express();
+
 app.use(express.json());
+
+// Really simple auth. I don't think i need more than this for this bot :/
+app.use((request, response, next) => {
+  if (request.headers.token == undefined || request.headers.token != process.env.AUTH_TOKEN) {
+    response.sendStatus(403);
+    return;
+  }
+  next();
+})
+
 const server = app.listen(process.env.PORT, () => {
   console.log(`SVR_STS: Online. Listening at ${process.env.URL}:${process.env.PORT}`);
 });

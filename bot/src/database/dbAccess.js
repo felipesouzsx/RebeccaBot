@@ -19,7 +19,7 @@ async function fetchDatabase(url, method='GET', body=null) {
   let result = {status: 503, data: {}};
   const request = {
     method: method,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'Token': process.env.DATABASE_AUTH_TOKEN },
     cache: 'no-store' // I have my own caching solution
   };
   if (body != null) { request.body = body }
