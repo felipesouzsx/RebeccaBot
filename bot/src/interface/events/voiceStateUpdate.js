@@ -1,27 +1,15 @@
-const { getCurrentTimestamp } = require('../../util/timeUtil.js');
-const userDB = require('../../database/userDb.js');
+const updateUserTimestamp = require('../../controller/updateUserTimestamp.js');
 
 
 module.exports = async (CLIENT, ...args) => {
-  const NEW_STATE = args[1];
-  const GUILD = NEW_STATE.guild;
-  const USER_DATA = GUILD.members.cache.get(NEW_STATE.id).user;
-  const NOW = getCurrentTimestamp();
+  const new_state = args[1];
+  const guild = new_state.guild;
+  const userData = new_state.member.user;
 
-  if (USER_DATA.bot) { return }
+  let guildId = guild.id;
+  let userId = userData.id;
 
-  try {
-    const USER = userDB.get(GUILD.id, USER.id);
-  } catch (error) {
-    console.log(`MSG_CRT: Error when fetching user: ${error}`);
-    return;
-  }
+  if (userData.bot) { return }
 
-  USER.lastMessageTimestamp = NOW;
-
-  try {
-    await userDB.edit(NEW_STATE.guild.id, USER);
-  } catch (error) {
-    console.log(error);
-  }
+  updateUserTimestamp(guildId, userId);
 }
